@@ -25,6 +25,7 @@ app.use("/image",express.static("./image"))
     const coverImageRouts = require("./routes/coverImageRoutes");
     const otherImageRouts = require("./routes/otherImageRoutes");
     const application = require("./routes/applicationRoutes");
+    const loanApplication = require("./routes/loanApplicationRoutes");
 
 
 
@@ -35,6 +36,7 @@ app.use("/image",express.static("./image"))
     app.use("/coverImage",coverImageRouts)  
     app.use("/otherImage",otherImageRouts)  
     app.use("/application",application)  
+    app.use("/loan-application",loanApplication)  
    
 
 // data base connection
