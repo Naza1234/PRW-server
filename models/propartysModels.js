@@ -39,6 +39,14 @@ const propertySchema= mongoose.Schema (
             type : String,
             require: false
          },
+        landLordAgentsName: {
+            type : String,
+            require: true
+         },
+        landLordAgentsContact: {
+            type : String,
+            require: true
+         },
         for: {
             type : String,
             require: true
