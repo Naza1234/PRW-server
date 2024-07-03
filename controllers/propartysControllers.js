@@ -1,4 +1,6 @@
 const DB=require('../models/propartysModels')
+const coverDB=require('../models/propartysModels')
+const otherDB=require('../models/propartysModels')
 
 exports.AddProperty= async(req,res)=>{
     try {
@@ -86,19 +88,23 @@ exports.UpdateSingleProperty=async (req,res)=>{
 }
 
 
-exports.DeleteSingleProperty= async(req,res)=>{
+exports.DeleteSingleProperty = async (req, res) => {
     try {
-        
+        const { id } = req.params;
 
-        const{id}=req.params
-        const data=await DB.findByIdAndDelete(id)
-        
-        res.status(200).json(data)
+        // Check if the property exists
+        const property = await DB.findById(id);
+        if (!property) {
+            return res.status(404).json({ message: "Property not found" });
+        }
 
+        // Delete the property and associated records
+        await DB.findByIdAndDelete(id);
+        await coverDB.deleteMany({ PropertyId: id });
+        await otherDB.deleteMany({ PropertyId: id });
 
+        res.status(200).json({ message: "Property and associated records deleted successfully" });
     } catch (error) {
-        res.status(500).json({
-            message:error.message
-          }) 
+        res.status(500).json({ message: error.message });
     }
-}
+};
