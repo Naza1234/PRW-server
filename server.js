@@ -8,7 +8,7 @@ const cors = require('cors');
 
 
 const corsOptions = {
-    origin: '*', // Allow requests from this specific URL
+    origin: 'https://homevarse.com', // Allow requests from this specific URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
   };
 app.use(cors(corsOptions));
