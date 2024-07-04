@@ -99,7 +99,7 @@ exports.UpdateSingleOtherImage=async (req,res)=>{
         }
         
         const image = images[0];
-        const imagePath = path.join(__dirname, 'image', image.filename); // Adjust path as necessary
+        const imagePath = `./image/${image.filename}`;
         
         // Read the image file
         const imageBuffer = fs.readFileSync(imagePath);
