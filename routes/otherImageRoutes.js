@@ -7,7 +7,7 @@ router
 .get('/', controller.GetAllOtherImage)
 .get('/by-id/:id', controller.GetAllOtherImageById)
 .get('/:id', controller.GetSingleOtherImage)
-.put('/:id', controller.UpdateSingleOtherImage)
+.put('/:id',controller.uplaod, controller.UpdateSingleOtherImage)
 .delete('/:id', controller.DeleteSingleOtherImage)
 
 module.exports = router;

@@ -92,18 +92,33 @@ exports.GetSingleOtherImage= async (req,res)=>{
 
 exports.UpdateSingleOtherImage=async (req,res)=>{
     try {
+        const images = req.files;
         
-
-        const{id}=req.params
-        const data=await DB.findByIdAndUpdate(id,req.body)
+       
+        const image = images[0];
+        const imagePath = `./image/${image[0].filename}`; 
+        // Read the image file
+        const imageBuffer = fs.readFileSync(imagePath);
         
-        res.status(200).json(data)
-
+        // Determine the image MIME type (assuming jpeg for simplicity, modify as needed)
+        const mimeType = image.mimetype || 'image/jpeg';
+        
+        // Convert the image buffer to a data URI
+        const dataURI = `data:${mimeType};base64,${imageBuffer.toString("base64")}`;
+        
+        const data = {
+            ImageUrl: dataURI
+        };
+        
+        const { id } = req.params;
+        const newData = await DB.findByIdAndUpdate(id, data, { new: true });
+        
+ 
+        
+        res.status(200).json(newData);
 
     } catch (error) {
-        res.status(500).json({
-            message:error.message
-          }) 
+        res.status(500).json({ message: error.message });
     }
 }
 
