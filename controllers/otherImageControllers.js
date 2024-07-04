@@ -94,13 +94,17 @@ exports.UpdateSingleOtherImage=async (req,res)=>{
     try {
         const images = req.files;
         
-       
+        if (!images || images.length === 0) {
+            return res.status(400).json({ message: 'No files were uploaded.' });
+        }
+        
         const image = images[0];
-        const imagePath = `./image/${image[0].filename}`; 
+        const imagePath = path.join(__dirname, 'image', image.filename); // Adjust path as necessary
+        
         // Read the image file
         const imageBuffer = fs.readFileSync(imagePath);
         
-        // Determine the image MIME type (assuming jpeg for simplicity, modify as needed)
+        // Determine the image MIME type
         const mimeType = image.mimetype || 'image/jpeg';
         
         // Convert the image buffer to a data URI
@@ -113,7 +117,9 @@ exports.UpdateSingleOtherImage=async (req,res)=>{
         const { id } = req.params;
         const newData = await DB.findByIdAndUpdate(id, data, { new: true });
         
- 
+        if (!newData) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
         
         res.status(200).json(newData);
 
