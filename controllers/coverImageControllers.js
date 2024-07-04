@@ -80,31 +80,42 @@ exports.GetSingleCoverImage= async (req,res)=>{
 }
 
 
-exports.UpdateSingleCoverImage=async (req,res)=>{
+exports.UpdateSingleCoverImage = async (req, res) => {
     try {
-        
-        const image=req.files
-        const imagePath = `./image/${image[0].filename}`;
+        const images = req.files;
+
+        if (!images || images.length === 0) {
+            return res.status(400).json({ message: 'No files were uploaded.' });
+        }
+
+        const image = images[0];
+        const imagePath = path.join(__dirname, 'image', image.filename); // Adjust path as necessary
+
         // Read the image file
         const imageBuffer = fs.readFileSync(imagePath);
-        
+
+        // Determine the image MIME type
+        const mimeType = image.mimetype || 'image/jpeg';
+
         // Convert the image buffer to a data URI
-        const dataURI = `data:image/jpeg;base64,${imageBuffer.toString("base64")}`;
-        const data={
-           ImageUrl:dataURI
-           }
-        const{id}=req.params
-        const newData=await DB.findByIdAndUpdate(id,data, { new: true })
-        
-        res.status(200).json(newData)
+        const dataURI = `data:${mimeType};base64,${imageBuffer.toString("base64")}`;
 
+        const data = {
+            ImageUrl: dataURI
+        };
 
+        const { id } = req.params;
+        const newData = await DB.findByIdAndUpdate(id, data, { new: true });
+
+        if (!newData) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
+
+        res.status(200).json(newData);
     } catch (error) {
-        res.status(500).json({
-            message:error.message
-          }) 
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
 
 exports.DeleteSingleCoverImage= async(req,res)=>{
